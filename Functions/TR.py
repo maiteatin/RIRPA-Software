@@ -1,5 +1,5 @@
 import numpy as np
-from leastsquares import leastsquares
+from Functions.leastsquares import leastsquares
 
 
 def TR(y, fs):
@@ -30,11 +30,4 @@ def TR(y, fs):
 
     return EDT, T20, T30
 
-# # Test
-# import matplotlib.pyplot as plt
-# plt.plot(y_edt)
-# plt.plot(f_edt)
-# plt.show()
-#
-# #print(i_20)
-# #print(y_max)
+

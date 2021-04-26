@@ -1,11 +1,11 @@
 import numpy as np
-from recorteIR import recorte
-from lundeby import lundeby
-from schroeder import schroeder
-from chu import chuCompensation
-from medianf import medianf
+from Functions.recorteIR import recorte
+from Functions.lundeby import lundeby
+from Functions.schroeder import schroeder
+from Functions.chu import chuCompensation
+from Functions.medianf import medianf
 import sys
-from leastsquares import leastsquares
+from Functions.leastsquares import leastsquares
 
 
 def TtEDTt(ir, fs, smoothing, noiseComp, medianwindow):
@@ -40,16 +40,4 @@ def TtEDTt(ir, fs, smoothing, noiseComp, medianwindow):
 
     return Tt, EDTt
 
-# example
-# from audioRead import audioRead
-#
-# path = 'IR_5.wav'
-# ir, fs, c, d, e, f = audioRead(path)
-# ir = recorte(ir)
-# Tt, EDTt = TtEDTt(ir, fs)
-# ir[int(Tt * fs)] = max(ir)
-# print(Tt, EDTt)
-# import matplotlib.pyplot as plt
-#
-# plt.plot(ir)
-# plt.show()
+

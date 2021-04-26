@@ -13,12 +13,3 @@ def recorte(data):
     data = data[(in_max)+5:]
     return data
 
-# import soundfile as sf
-# import matplotlib.pyplot as plt
-# data, fs = sf.read('RIR_App\IR_3.wav')
-#
-# data2 = recorte(data)
-#
-# plt.plot(data)
-# plt.plot(data2)
-# plt.show()

@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from leastsquares import leastsquares
+from Functions.leastsquares import leastsquares
 
 
 def lundeby(y, Fs, Ts):

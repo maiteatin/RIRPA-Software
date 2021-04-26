@@ -25,9 +25,4 @@ name = 'TR' + str(np.round(TR, 2)) + 's_tc' + str(np.round(tc, 2)) + 's'
 
 sf.write('RIRs sintéticas/' + name + '.wav', y, fs)
 
-# import matplotlib.pyplot as plt
-# plt.plot(t,20*np.log10(y))
-# # plt.plot(t,20*np.log10(z))
-# # plt.plot(t,20*np.log10(M*n))
-# plt.vlines(tc, -200, 0, colors='r')
-# plt.show()
+

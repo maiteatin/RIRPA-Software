@@ -1,15 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog, messagebox
-from filtroInverso import iss
+from Functions.filtroInverso import iss
 from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
+    FigureCanvasTkAgg)
 from matplotlib.figure import Figure
 from scipy import signal
-import wave
 import numpy as np
-from audioRead import audioRead
-from calculateMain import calculateMain
+from Functions.audioRead import audioRead
+from Functions.calculateMain import calculateMain
 import csv
 import os
 import soundfile as sf

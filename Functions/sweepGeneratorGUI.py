@@ -1,16 +1,15 @@
 from tkinter import *
-from tkinter import ttk
 from tkinter import filedialog
 from filtroInverso import iss
 from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
+    FigureCanvasTkAgg)
 from matplotlib.figure import Figure
 import soundfile as sf
 import numpy as np
 from audioRead import audioRead
 
 # GUI Main Window
-root = Tk() # This is the section of code which creates the main window
+root = Tk()  # This is the section of code which creates the main window
 root.geometry('400x420')  # Window dimensions
 root.configure(background='#FFFFFF')  # Background Color
 root.title('Sine Sweep')  # Window title
@@ -34,6 +33,7 @@ def helpFunction():
     # A Label widget to show in toplevel
     Label(helpWindow,
           text=open('sweepHelp.txt', 'r').read(), wraplength=250, justify="left").pack()
+
 
 def generateFunction():
     f1 = np.float64(sweepStart.get())
