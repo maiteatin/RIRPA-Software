@@ -55,10 +55,10 @@ def helpFunction():
     helpWindow.title("Help")
     helpWindow.resizable(False, False)
     # sets the geometry of toplevel
-    helpWindow.geometry("400x650")
+    helpWindow.geometry("500x650")
 
     # A Label widget to show in toplevel
-    Label(helpWindow, text=open('help.txt', 'r', encoding="utf8").read(), wraplength=320, justify="left").pack()
+    Label(helpWindow, text=open('help.txt', 'r', encoding="utf8").read(), wraplength=420, justify="left").pack()
 
 
 def smoothingModeFunction():

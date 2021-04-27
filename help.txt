@@ -15,3 +15,6 @@ Note: this application is only compatible with .wav audio files.
 5) The results are displayed on a new window (Acoustic Parameters). The information displayed on the table can be changed by selecting the Channel on the right hand side.  The plots can be updated by clicking on each frequency band’s header on the table.
 
 6) Results can be saved as a .csv file by clicking on “Export results to CSV…”
+
+Developed by Joaquin Ponferrada (joacoponfe@gmail.com), Alejandro Sosa Welford (alejandrososawelford@gmail.com) and Maite Atín (maiteatin@gmail.com) for Acoustic Instruments and Measurements (UNTREF)
+April 2021
