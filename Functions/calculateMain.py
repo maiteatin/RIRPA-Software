@@ -27,7 +27,7 @@ def calculateMono(ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC):
     irFilt2, centerFrequency_Hz = (filterButterBP(np.flip(ir), fs,
                                                   analysis))  # analysis is 0 for octave-band filtering and 1 for 1/3 octave band filtering
     irFilt2 = np.flip(irFilt2, 1)  # Time-reversed analysis. np.flip() used before and after filtering
-    
+    irFilt2 = np.vstack((irFilt2, ir))
 
     # irFilt2 = np.abs(hilbert(irFilt2))                      # Uncomment to use Hilbert smoothing
     ir_IACC = irFilt2  # ir_IACC variable stored for calculating IACC parameters if optional args input argument *IACC is passed.
