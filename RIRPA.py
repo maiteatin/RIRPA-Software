@@ -26,6 +26,9 @@ root.resizable(False, False)  # Non-resizable
 
 
 def loadFunction():
+    global rangef
+    rangef=[]
+    limitBands.set(0)
     global filename  # filename is path of the loaded IR and is used when calculateMain is called
     filename = filedialog.askopenfilename(
         title='Select an Impulse Response File', filetypes=[("WAV Files", "*.wav")])
@@ -161,7 +164,8 @@ def openSweep():
             title='Select a Sine Sweep File', filetypes=[("WAV Files", "*.wav")])
         sweepData, sweepfs, sweepPath, sweepDuration, sweepFrames, sweepChannels = audioRead(sweepFilename)
         if messagebox.askyesno("", "Would you like to load an inverse filter file too?"):
-            inverseFilterFilename = filedialog.askopenfilename(title='Select an Inverse Filter File', filetypes=[("WAV Files", "*.wav")])
+            inverseFilterFilename = filedialog.askopenfilename(title='Select an Inverse Filter File',
+                                                               filetypes=[("WAV Files", "*.wav")])
             IFData, IFfs, IFPath, IFDuration, IFFrames, IFChannels = audioRead(inverseFilterFilename)
             messagestring = 'Successfully loaded files. \n Sweep: ' + os.path.basename(
                 os.path.normpath(sweepFilename)) + '\n Inverse Filter: ' + os.path.basename(
@@ -275,10 +279,10 @@ def tree_insert(tree, values, parameters):
 def channelSelect(event):
     selected = int(CH_tree.focus())
     tree_insert(param_tree, values[selected - 1], parameters)
-    updatePlot(band_1k_idx)
+    updatePlot(-1)
 
 
-def getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLength, IACC):
+def getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLength, rangef, IACC):
     # Calculate all parameters from main function
     if MMFWindowLength / fs > len(ir) / (2 * fs):
         messagebox.showwarning("Error", "Please enter a shorter window length")
@@ -286,8 +290,7 @@ def getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLen
     if channels == 1:  # Mono
         ir_smooth_db, ir_db, EDT, T20, T30, C50, C80, Tt, Ts, EDTt = calculateMain(ir, fs, analysis, smoothing,
                                                                                    noiseComp,
-                                                                                   MMFWindowLength)
-
+                                                                                   MMFWindowLength,rangef)
         # Rounding to 3 decimal digits and convert to tuple for display in treeview
         C50 = tuple(np.round(C50, 3))
         C80 = tuple(np.round(C80, 3))
@@ -304,11 +307,11 @@ def getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLen
                 y = list(EDT)
                 y[i] = "-"
                 EDT = tuple(y)
-            if T20[i] < 0.0  or np.isnan(T20[i]) or T20[i] > 15:
+            if T20[i] < 0.0 or np.isnan(T20[i]) or T20[i] > 15:
                 y = list(T20)
                 y[i] = "-"
                 T20 = tuple(y)
-            if T30[i] < 0.0  or np.isnan(T30[i]) or T30[i] > 15:
+            if T30[i] < 0.0 or np.isnan(T30[i]) or T30[i] > 15:
                 y = list(T30)
                 y[i] = "-"
                 T30 = tuple(y)
@@ -338,7 +341,7 @@ def getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLen
         irs = [ir_db, ir_smooth_db]
     if channels == 2:  # Stereo
         ir_smooth_dbL, ir_dbL, EDTL, T20L, T30L, C50L, C80L, TtL, TsL, EDTtL, ir_smooth_dbR, ir_dbR, EDTR, T20R, T30R, C50R, C80R, TtR, TsR, EDTtR, varIACC = calculateMain(
-            ir, fs, analysis, smoothing, noiseComp, MMFWindowLength, IACC)
+            ir, fs, analysis, smoothing, noiseComp, MMFWindowLength,centerFrequency_Hz, IACC)
 
         # Rounding to 3 decimal digits and convert to tuple for display in treeview
         C50L = tuple(np.round(C50L, 3))
@@ -365,7 +368,7 @@ def getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLen
                 y = list(EDTL)
                 y[i] = "-"
                 EDTL = tuple(y)
-            if T20L[i] < 0.0  or np.isnan(T20L[i]) or T20L[i] > 15:
+            if T20L[i] < 0.0 or np.isnan(T20L[i]) or T20L[i] > 15:
                 y = list(T20L)
                 y[i] = "-"
                 T20L = tuple(y)
@@ -469,7 +472,7 @@ def generateFigure(ir, decay, Tt, Ts):
         ax.axvline(x=Tt, linewidth=0.5, color='r', linestyle='--', label='Tt')
     if Ts != '-':
         ax.axvline(x=Ts, linewidth=0.5, color='g', linestyle='--', label='Ts')
-    plotFormat(ax, '1k')
+    plotFormat(ax, 'Global')
     return fig, ax
 
 
@@ -557,6 +560,10 @@ def calculateFunction():
     if analysis == 0:  # Octave Bands
         centerFrequency_Hz = ['31.5', '63', '125', '250', '500', '1k', '2k', '4k', '8k', '16k', "Global"]
 
+    if limitBands.get() == 1:
+        newRange.append("Global")
+        centerFrequency_Hz = newRange
+
     param_frame = Frame(window, width=1000, height=100)
     global param_tree  # Revisar esto, tuve que ponerlo para que anduviese la funcion channelSelect
     param_tree = ttk.Treeview(param_frame, height=5)
@@ -609,7 +616,7 @@ def calculateFunction():
     updateProgressbar(50)
 
     global values, parameters, irs
-    values, parameters, irs = getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLength, IACC)
+    values, parameters, irs = getParameters(ir, fs, channels, analysis, smoothing, noiseComp, MMFWindowLength, rangef,IACC)
     if channels == 2:
         tree_insert(param_tree, values[0],
                     parameters)  # Insert values into table using tree_insert function (L channel by default)
@@ -620,12 +627,12 @@ def calculateFunction():
     updateProgressbar(80)
 
     # CANVAS AND PLOT
-    global plotCanvas, fig, ax, band_1k_idx
-    band_1k_idx = centerFrequency_Hz.index('1k')
-    Tt_1k = values[0][6][band_1k_idx]
-    Ts_1k = values[0][7][band_1k_idx]
-    fig, ax = generateFigure(irs[0][band_1k_idx],
-                             irs[1][band_1k_idx], Tt_1k, Ts_1k)  # As default, plot Left channel (if stereo), 1 kHz band.
+    global plotCanvas, fig, ax
+    Tt_G = values[0][6][-1]
+    Ts_G = values[0][7][-1]
+    fig, ax = generateFigure(irs[0][-1],
+                             irs[1][-1], Tt_G,
+                             Ts_G)  # As default, plot Left channel (if stereo), 1 kHz band.
     plotCanvas = FigureCanvasTkAgg(fig, master=window)
     plotCanvas.draw()
 
@@ -655,6 +662,52 @@ def exportCSVFunction(param_tree):
             row = [param_tree.item(row_id)['text']] + param_tree.item(row_id)['values']  # Writes Parameter Values
             exp_writer.writerow(row)
 
+
+def rangeSelect():
+    # GUI Main Window
+    rangeWindow = Tk()  # This is the section of code which creates the main window
+    rangeWindow.geometry('400x200')  # Window dimensions
+    rangeWindow.configure(background='#FFFFFF')  # Background Color
+    rangeWindow.title('Analyzed Frequency Range')  # Window title
+    # root.iconbitmap('images/icon.ico')
+    rangeWindow.resizable(False, False)  # Non-resizable
+    global centerFrequency_Hz
+    if analysisVariable.get() == 0:
+        centerFrequency_Hz = ['31.5', '63', '125', '250', '500', '1k', '2k', '4k', '8k', '16k']
+    else:
+        centerFrequency_Hz = ['25', '31.5', '40', '50', '63', '80', '100', '125', '160', '200', '250', '315',
+                              '400', '500', '630', '800', '1k', '1.25k', '1.6k', '2k', '2.5k', '3.15k',
+                              '4k', '5k', '6.3k', '8k', '10k', '12.5k', '16k', '20k']
+
+    rangeMinOptionList = centerFrequency_Hz
+    rangeMinVariable = StringVar(rangeWindow)
+    rangeMinVariable.set(rangeMinOptionList[0])
+    rangeMinOptMenu = OptionMenu(rangeWindow, rangeMinVariable, *rangeMinOptionList)
+    rangeMinOptMenu.config(width=13, font=('Helvetica', 12))
+    rangeMinOptMenu.place(x=25, y=75)
+    fMin = rangeMinOptionList.index(rangeMinVariable.get())
+
+    rangeMaxOptionList = centerFrequency_Hz
+    rangeMaxVariable = StringVar(rangeWindow)
+    rangeMaxVariable.set(rangeMaxOptionList[-1])
+    rangeMaxOptMenu = OptionMenu(rangeWindow, rangeMaxVariable, *rangeMaxOptionList)
+    rangeMaxOptMenu.config(width=13, font=('Helvetica', 12))
+    rangeMaxOptMenu.place(x=125, y=75)
+    fMax = rangeMaxOptionList.index(rangeMaxVariable.get())
+
+    def rangeOkFunction(centerFrequency_Hz):
+        fMin = rangeMinOptionList.index(rangeMinVariable.get())
+        fMax = rangeMaxOptionList.index(rangeMaxVariable.get())
+        global rangef
+        rangef = [fMin,fMax]
+        global newRange
+        newRange = centerFrequency_Hz[fMin:fMax+1]
+        if centerFrequency_Hz == []:
+            messagebox.showwarning("Error", "Please select a valid interval")
+        limitBands.set(1)
+        rangeWindow.destroy()
+
+    rangeOk = Button(rangeWindow, text='Confirm', command=lambda: rangeOkFunction(centerFrequency_Hz), padx=10).place(x=75, y=100)
 
 # MAIN WINDOW LAYOUT
 # Rectangle
@@ -729,8 +782,11 @@ IACCOpt.config(state='disabled')
 analysisVariable = IntVar(root)
 analysisVariable.set(0)  # Sets Octave Bands as default
 
-R1 = Radiobutton(root, text="Octave Bands", variable=analysisVariable, value=0).place(x=25, y=190)
-R2 = Radiobutton(root, text="One Third Octave Bands", variable=analysisVariable, value=1).place(x=160, y=190)
+R1 = Radiobutton(root, text="Octave Bands", variable=analysisVariable, value=0)
+R1.place(x=25, y=190)
+R2 = Radiobutton(root, text="One Third Octave Bands", variable=analysisVariable, value=1).place(x=130, y=190)
+freqbutton = Button(root, text="Choose Range", command=rangeSelect)
+freqbutton.place(x=300, y=190)
 
 # Smoothing Radiobuttons
 smoothingVariable = IntVar(root)
@@ -763,6 +819,7 @@ channels = ''
 path = ''
 frames = ''
 sweepIRfilename = ''
+rangef =[]
 
 # Initialize IR tree values
 IR_tree.insert(parent='', index='end', iid=0, text="", values=(filename, duration, samplerate, channels))
@@ -771,5 +828,7 @@ IR_tree.place(x=20, y=75)
 # Status Label
 statusLabel = Label(root, text='Status: ready')
 statusLabel.pack(side=BOTTOM)
+limitBands = IntVar(root)
+limitBands.set(0)
 
 root.mainloop()  # Main Loop of the program

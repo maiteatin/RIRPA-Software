@@ -15,7 +15,7 @@ from Functions.medianf import medianf
 # calculateMain.py is the main processing script, where most other functions used to process the desired IR response
 # are called.
 
-def calculateMono(ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC):
+def calculateMono(ir, fs, analysis, smoothing, noiseComp, medianwindow, rangef, *IACC):
     """Calculates single channel parameters for EDT, T20, T30, C50, C80, Ts, Tt and EDTt given the desired smoothing
     and filtering parameters. """
 
@@ -25,7 +25,7 @@ def calculateMono(ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC):
         # it is shortened to 15 seconds to avoid overly large data to be processed.
 
     irFilt2, centerFrequency_Hz = (filterButterBP(np.flip(ir), fs,
-                                                  analysis))  # analysis is 0 for octave-band filtering and 1 for 1/3 octave band filtering
+                                                  analysis, rangef))  # analysis is 0 for octave-band filtering and 1 for 1/3 octave band filtering
     irFilt2 = np.flip(irFilt2, 1)  # Time-reversed analysis. np.flip() used before and after filtering
     irFilt2 = np.vstack((irFilt2, ir))
 
@@ -98,7 +98,7 @@ def calculateMono(ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC):
         return ir_smooth_db, ir_db, m_edt, m_t20, m_t30, C50, C80, Tt, Ts, EDTt
 
 
-def calculateMain(ir, fs, analysis, smoothing, noiseComp=0, medianwindow=501, *IACC):
+def calculateMain(ir, fs, analysis, smoothing, noiseComp, medianwindow, rangef, *IACC):
     """calculateMain function will be called by GUI. It calls calculateMono for every channel input in "ir" and
     calculates IACC parameters in the case of *args IACC argument is passed """
 
@@ -109,13 +109,13 @@ def calculateMain(ir, fs, analysis, smoothing, noiseComp=0, medianwindow=501, *I
                                                                                                              analysis,
                                                                                                              smoothing,
                                                                                                              noiseComp,
-                                                                                                             medianwindow,
+                                                                                                             medianwindow,rangef,
                                                                                                              IACC)
         ir_smooth_dbR, ir_dbR, m_edtR, m_t20R, m_t30R, C50R, C80R, TtR, TsR, ir_IACCR, EDTtR = calculateMono(ir[1], fs,
                                                                                                              analysis,
                                                                                                              smoothing,
                                                                                                              noiseComp,
-                                                                                                             medianwindow,
+                                                                                                             medianwindow,rangef,
                                                                                                              IACC)
 
         IACCearly = np.zeros(len(ir_IACCL))  # Init. IACC variables
@@ -135,7 +135,7 @@ def calculateMain(ir, fs, analysis, smoothing, noiseComp=0, medianwindow=501, *I
     else:  # Mono IR input
         ir_smooth_db, ir_db, m_edt, m_t20, m_t30, C50, C80, Tt, Ts, EDTt = calculateMono(ir, fs, analysis, smoothing,
                                                                                          noiseComp,
-                                                                                         medianwindow)
+                                                                                         medianwindow,rangef)
         return ir_smooth_db, ir_db, m_edt, m_t20, m_t30, C50, C80, Tt, Ts, EDTt
 
 # # Test # # # MONO

@@ -2,7 +2,7 @@ import numpy as np
 from scipy import signal
 
 
-def filterButterBP(y, fs, division):
+def filterButterBP(y, fs, division, rangef):
     """
     Pass-band Butterworth filter, 8th order, central frequencies given by "division"
     y = array to be filtered
@@ -17,20 +17,27 @@ def filterButterBP(y, fs, division):
         centerFrequency_Hz = np.array([25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315,
                                        400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150,
                                        4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000])
+        if rangef:
+            centerFrequency_Hz = centerFrequency_Hz[rangef[0]:rangef[1] + 1]
+
         # Superior and inferior limits of each central band
         factor = np.power(G, 1 / (2 * n))
         lowerCutoffFrequency_Hz = centerFrequency_Hz / factor
         upperCutoffFrequency_Hz = centerFrequency_Hz * factor
-        upperCutoffFrequency_Hz[29] = 22049
-        filteredSignal = np.zeros((30, len(y)))
+        if np.where(centerFrequency_Hz == 20000)[0]:
+            upperCutoffFrequency_Hz[np.where(centerFrequency_Hz == 20000)[0]] = 22049
+        filteredSignal = np.zeros((len(centerFrequency_Hz), len(y)))
     else:
         centerFrequency_Hz = np.array([31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000])
+        if rangef:
+            centerFrequency_Hz = centerFrequency_Hz[rangef[0]:rangef[1] + 1]
         # Superior and inferior limits of each central band
         factor = np.sqrt(2)
         lowerCutoffFrequency_Hz = centerFrequency_Hz / factor
         upperCutoffFrequency_Hz = centerFrequency_Hz * factor
-        upperCutoffFrequency_Hz[9] = 22049
-        filteredSignal = np.zeros((10, len(y)))
+        if np.where(centerFrequency_Hz == 16000)[0]:
+            upperCutoffFrequency_Hz[np.where(centerFrequency_Hz == 16000)[0]] = 22049
+        filteredSignal = np.zeros((len(centerFrequency_Hz), len(y)))
 
     # Creation and application of the filter
     for lower, upper in zip(lowerCutoffFrequency_Hz, upperCutoffFrequency_Hz):  # IIR Butterworth Filter N-th order
