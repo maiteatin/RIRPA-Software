@@ -56,7 +56,7 @@ def helpFunction():
 
     # Sets the title of the Toplevel widget
     helpWindow.title("Help")
-    helpWindow.resizable(False, False)
+    helpWindow.resizable(False, False) 
     # sets the geometry of toplevel
     helpWindow.geometry("500x650")
 
@@ -451,7 +451,10 @@ def timeArray(y, fs):
 
 def plotFormat(ax, label):
     ax.grid()
-    ax.set_title(label + 'Hz')
+    if label == 'Global':
+        ax.set_title(label)
+    else:
+        ax.set_title(label + 'Hz')
     ax.set_xlabel('Time [s]')
     ax.set_ylabel('Level [dB]')
     ax.set_ylim([-100, 3])
@@ -648,6 +651,7 @@ def calculateFunction():
     window.grid_rowconfigure(1, weight=1)
     window.deiconify()  # Show window
 
+    limitBands.set(0) # Reset frequency bands range limiter to full band
     updateProgressbar(100)
 
 
@@ -666,7 +670,7 @@ def exportCSVFunction(param_tree):
 def rangeSelect():
     # GUI Main Window
     rangeWindow = Tk()  # This is the section of code which creates the main window
-    rangeWindow.geometry('400x200')  # Window dimensions
+    rangeWindow.geometry('350x200')  # Window dimensions
     rangeWindow.configure(background='#FFFFFF')  # Background Color
     rangeWindow.title('Analyzed Frequency Range')  # Window title
     # root.iconbitmap('images/icon.ico')
@@ -692,8 +696,14 @@ def rangeSelect():
     rangeMaxVariable.set(rangeMaxOptionList[-1])
     rangeMaxOptMenu = OptionMenu(rangeWindow, rangeMaxVariable, *rangeMaxOptionList)
     rangeMaxOptMenu.config(width=13, font=('Helvetica', 12))
-    rangeMaxOptMenu.place(x=125, y=75)
+    rangeMaxOptMenu.place(x=200, y=75)
     fMax = rangeMaxOptionList.index(rangeMaxVariable.get())
+
+    fromLabel = Label(rangeWindow, text='From')
+    fromLabel.place(x=25, y=50)
+    toLabel = Label(rangeWindow, text='To')
+    toLabel.place(x=200, y=50)
+
 
     def rangeOkFunction(centerFrequency_Hz):
         fMin = rangeMinOptionList.index(rangeMinVariable.get())
@@ -704,10 +714,10 @@ def rangeSelect():
         newRange = centerFrequency_Hz[fMin:fMax+1]
         if centerFrequency_Hz == []:
             messagebox.showwarning("Error", "Please select a valid interval")
-        limitBands.set(1)
+        limitBands.set(1) # Indicates that bands to be calculated and displayed have been limited
         rangeWindow.destroy()
 
-    rangeOk = Button(rangeWindow, text='Confirm', command=lambda: rangeOkFunction(centerFrequency_Hz), padx=10).place(x=75, y=100)
+    rangeOk = Button(rangeWindow, text='Confirm', command=lambda: rangeOkFunction(centerFrequency_Hz), padx=10).place(x=130, y=120)
 
 # MAIN WINDOW LAYOUT
 # Rectangle
@@ -784,9 +794,9 @@ analysisVariable.set(0)  # Sets Octave Bands as default
 
 R1 = Radiobutton(root, text="Octave Bands", variable=analysisVariable, value=0)
 R1.place(x=25, y=190)
-R2 = Radiobutton(root, text="One Third Octave Bands", variable=analysisVariable, value=1).place(x=130, y=190)
-freqbutton = Button(root, text="Choose Range", command=rangeSelect)
-freqbutton.place(x=300, y=190)
+R2 = Radiobutton(root, text="1/3 Octave Bands", variable=analysisVariable, value=1).place(x=140, y=190)
+freqbutton = Button(root, text="Choose Range", padx=5, command=rangeSelect)
+freqbutton.place(x=285, y=190)
 
 # Smoothing Radiobuttons
 smoothingVariable = IntVar(root)
