@@ -656,7 +656,7 @@ def calculateFunction():
 
 
 def exportCSVFunction(param_tree):
-    CSVfilename = filedialog.asksaveasfilename(initialdir=os.getcwd(), title="Save CSV",
+    CSVfilename = filedialog.asksaveasfilename(initialdir=os.getcwd(), title="Save CSV", defaultextension=".csv",
                                                filetypes=(("CSV File,", "*.csv"), ("All Files", "*")))
     with open(CSVfilename, mode='w') as myfile:
         exp_writer = csv.writer(myfile, delimiter=',')
