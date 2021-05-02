@@ -4,6 +4,8 @@
 
 RIRPA (which stands for Room Impulse Response Processing Application) is an open source software designed for processing measured impulse response files and obtaining their acoustic parameters.
 
+To use the software run `RIRPA.py`
+
 Note: this application is only compatible with .wav audio files.
 
 1) Select “Load IR…” or “Load Sine Sweep…”
