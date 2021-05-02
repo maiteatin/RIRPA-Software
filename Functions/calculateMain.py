@@ -137,27 +137,3 @@ def calculateMain(ir, fs, analysis, smoothing, noiseComp, medianwindow, rangef, 
                                                                                          noiseComp,
                                                                                          medianwindow,rangef)
         return ir_smooth_db, ir_db, m_edt, m_t20, m_t30, C50, C80, Tt, Ts, EDTt
-
-# # Test # # # MONO
-# path = 'IR_2.wav'
-# ir, fs, c, d, e, f = audioRead(path)
-# out, outdb, m_edt, m_t20, m_t30, C50, C80, Tt, Ts, EDTt = calculateMain(ir, fs, 0, 0, 1, 40)  # (ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC)
-#
-# # PRUEBAS MAI
-#
-# path = 'IR_6.wav'
-# ir, fs, c, d, e, f = audioRead(path)
-# out, outdb, m_edt, m_t20, m_t30, C50, C80, Tt, Ts = calculateMain(ir, fs, 1, 0, 1, 40)  # (ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC)
-#
-# print(m_edt[24], m_t20[24], m_t30[24])
-#
-# plt.plot(outdb[29])
-# plt.plot(out[29])
-# plt.show()
-
-# # # Test # # # STEREO
-# path = 'WireGrind_s_4.8s_99w_100Hz_30m.wav'
-# ir, fs, c, d, e, f = audioRead(path)
-# ir_smooth_dbL, ir_dbL, m_edtL, m_t20L, m_t30L, C50L, C80L, TtL, TsL, EDTtL, ir_smooth_dbR, ir_dbR, m_edtR, m_t20R, m_t30R, C50R, C80R, TtR, TsR, EDTtR, varIACC = calculateMain(ir, fs, 0, 0, 1, 40, 1) # (ir, fs, analysis, smoothing, noiseComp, medianwindow, *IACC)
-#
-# print(" :3 ")

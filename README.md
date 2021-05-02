@@ -10,8 +10,7 @@ Note: this application is only compatible with .wav audio files.
 
 2) If “Load Sine Sweep” is selected, a new window will open where a Sweep File can be loaded. Optionally, its corresponding Inverse Filter File can be loaded. Otherwise, the Sweep Data can be entered manually (Start and Stop Frequencies, Duration and Type). Click “Generate IR” to generate the Impulse Response. You will be returned to the Main Window where the generated IR’s information will be displayed on the table.
 
-3) Select Analysis Mode, Smoothing Mode, Background Noise Compensation (if Schroeder is selected) or Window Length (if MMF is selected), and IACC Integration (only for binaural IRs).
-
+3) Select Analysis Mode, Smoothing Mode, Background Noise Compensation (if Schroeder is selected) or Window Length (if MMF is selected), and IACC Integration (only for binaural IRs). It is possible to select the range of frequencies to be analyzed by selecting the Choose Range button and establishing minimum and maximum center frequencies desired.
 4) Click Calculate.
 
 5) The results are displayed on a new window (Acoustic Parameters). The information displayed on the table can be changed by selecting the Channel on the right hand side.  The plots can be updated by clicking on each frequency band’s header on the table.
