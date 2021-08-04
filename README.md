@@ -31,4 +31,5 @@ RIRPA Software is developed entirely in Python with a `Python 3.8` base interpre
 
 
 ###### Developed by Joaquin Ponferrada (joacoponfe@gmail.com), Alejandro Sosa Welford (alejandrososawelford@gmail.com) and Maite Atín (maiteatin@gmail.com) for Acoustic Instruments and Measurements (UNTREF) 
+###### Written report available online:https://drive.google.com/file/d/1-6uUcJ54ZYt8FjHMY164GDr6KCZprReF/view?usp=sharing
 ###### April 2021
